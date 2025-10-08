@@ -125,7 +125,7 @@ bv$Catt_chain <- bv$Catt_chain[, bv$iter]
 
 # remove all the not necessary elements
 bv$elEnv <- ls(envir = bv)
-bv$elToRemove <- setdiff(bv$elEnv,  c("n_genes", "n_cells", "n_typeC", "n_subtypeC", "n_typeT0_off", "subtypeCell", "typeCell", "typeCellT0_off", "SampleToSave", "iter", "mcmcBurnin", "mcmcIter", "mcmcThin", "Catt_chain", "meanCatt_Iter", "LogSS_chain", "alpha_chain", "beta_chain", "gamma_chain", "uSS_off_chain", "sSS_off_chain", "uSS_on_chain", "sSS_on_chain", "T0_off_chain", "LogT0_off_chain", "u0_off_chain", "s0_off_chain", "k_chain", "Tau_chain",  "TStar_withM_chain", "u_chain", "s_chain", "v", "Eta_chain", "LogEta_chain", "Y_u", "Y_s"))
+bv$elToRemove <- setdiff(bv$elEnv,  c("n_genes", "n_cells", "n_typeC", "n_subtypeC", "n_typeT0_off", "subtypeCell", "typeCell", "typeCellT0_off", "SampleToSave", "iter", "loglikTOT", "mcmcBurnin", "mcmcIter", "mcmcThin", "Catt_chain", "meanCatt_Iter", "LogSS_chain", "alpha_chain", "beta_chain", "gamma_chain", "uSS_off_chain", "sSS_off_chain", "uSS_on_chain", "sSS_on_chain", "T0_off_chain", "LogT0_off_chain", "u0_off_chain", "s0_off_chain", "k_chain", "Tau_chain",  "TStar_withM_chain", "u_chain", "s_chain", "v", "Eta_chain", "LogEta_chain", "Y_u", "Y_s"))
 
 for(el in bv$elToRemove){
     rm(list = el, envir = bv)
