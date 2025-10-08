@@ -4,7 +4,13 @@
 # -----------------------------------------------------------
 
 # --- load results
-scVeloName <- paste0(pathToResults, "/", nameSim , "/output/res_,", typeSIM, "_", nameSim, "_", n_genes, "genes_", model, "_scVelo")
+if(nameSim == "moments"){
+    # real data
+    scVeloName <- paste0(pathToResults, "/", typeSIM, "/", nameSim, "/output/res_", typeSIM)
+}else{
+    # simulated data
+    scVeloName <- paste0(pathToResults, "/", nameSim , "/output/res_,", typeSIM, "_", nameSim, "_", n_genes, "genes_", model, "_scVelo")
+}
 
 # rates and steady states
 scv$fit_alpha <- as.matrix(read.csv(paste(scVeloName, "_fit_alpha.csv", sep = ""), header = TRUE))

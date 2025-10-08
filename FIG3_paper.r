@@ -50,7 +50,7 @@ mcmc <- 150                       # number of iterations of the mcmc we have run
 typeSIM <- "sim"                  # specify that we are considering simulated data
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 modelScVel <- "Demings"           # type of simulation method for scVelo results
 genesToPlot <- c(1, 3, 12)        # indexes of the genes that we want to plot        
 
@@ -71,13 +71,14 @@ scv <- new.env(parent = baseenv())
 if(addBayVel){
   maxLog <- FALSE
   source(paste0(pathToYourDirectory, "/loadBayVel_results.r"))
-  iterToPlot <- bv$loglikTOT[which.max(bv$loglikTOT[, 2]), 1]
+  iterToPlot <- which.max(bv$loglikTOT[,1])
 }
 
 # --- real parameters
 if(typeSIM == "sim" & addReal){  
   real <- new.env(parent = baseenv())
   pathReal <- paste0(pathToYourDirectory, "/simulations/", nameSim, "/", nameSim, "_", n_genes, ".RData")
+  load(paste0(pathReal), envir = real)
 }   
 
 # --- scVelo results
@@ -88,7 +89,7 @@ if(addScVelo){
 # upload the functions in order to check the version of the functions is the last one and they were not overwritten when the data were loaded.
 source(paste0(pathToYourDirectory, "/functions.R"))
 
-# 
+
 list_plot <- list()
 k <- 1
 for(g in genesTo_plot){

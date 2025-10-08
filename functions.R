@@ -3607,7 +3607,7 @@ RNA_velocity <- function(beta, gamma, pos_u, pos_s){
 
 
 
-nomeSIM_plot <- function(name){
+nameSim_TeX <- function(name){
   label <- ""
   if(grepl("SW1", name)){
       label <- paste(label,"Sw$_1$", sep = "")
@@ -3630,6 +3630,26 @@ nomeSIM_plot <- function(name){
   }else if(grepl("D4", name)){
       label <- paste(label,"NB", sep = "-")
   }
+  return(label)
+}
+
+
+nameReal_Pancreas <- function(name){
+  label <- ""
+  if(grepl("SW1", name)){
+      label <- paste0(label,"K = 1,$")
+  }else{
+      label <- paste0(label,"K = 8,$")
+  }
+
+  if(grepl("T1", name)){
+      label <- paste(label,"$R = 1$", sep = "-")
+  }else if(grepl("T2", name)){
+      label <- paste(label,"$R = 9$", sep = "-")
+  }else if(grepl("T3", name)){
+      label <- paste(label,"$R = 38$", sep = "-")
+  }
+  
   return(label)
 }
 

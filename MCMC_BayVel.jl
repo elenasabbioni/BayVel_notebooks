@@ -63,17 +63,17 @@ n_genes::Int64 = 2000                   # number of simulated genes
 R"""
 real <- FALSE  # Flag for real data vs simulated
 
-simName <- paste0(typeSW, "-", typeT, "-", typeD)
+nameSim <- paste0(typeSW, "-", typeT, "-", typeD)
 # Load DentateGyrus or Pancreas dataset
 if(startsWith(typeSIM, "DentateGyrus") | startsWith(typeSIM, "Pancreas")){
   path <- paste0(pathToYourDirectory, "/real data/", typeSIM, "/")
   real <- TRUE
   n_clusters <- ifelse(typeT == "T1", 1, "mult")
-  simNameREAL <- paste0(typeSIM, n_genes, "genes_", n_clusters, "subgr.RData")
-  load(paste0(path, simNameREAL)) # load real data
+  nameSimREAL <- paste0(typeSIM, n_genes, "genes_", n_clusters, "subgr.RData")
+  load(paste0(path, nameSimREAL)) # load real data
 }else{
   path <- paste0(pathToYourDirectory, "/simulations/")
-  load(paste0(path, simName, "/", simName, "_", n_genes, ".RData")) # Load simulated data
+  load(paste0(path, nameSim, "/", nameSim, "_", n_genes, ".RData")) # Load simulated data
 }
 
 # Set switching time labels depending on SW type
@@ -95,7 +95,7 @@ n_cells = dim(Y_u)[1]
 # Print some diagnostic info
 print("# ----------------------------")
 print(paste0("Type of simulation: ", typeSIM))
-print(paste0("Name of the simulation: ", simName))
+print(paste0("Name of the simulation: ", nameSim))
 print(paste0("Number of cells: ", n_cells))
 print(paste0("Number of genes: ", n_genes))
 print(paste0("Number of subgroups: ", length(unique(subtypeCell))))
@@ -109,7 +109,7 @@ print("# ----------------------------")
 # ========================
 @rget real        # Is the dataset real or simulated
 @rget typeSIM     # Simulation type
-@rget simName     # Simulation identifier
+@rget nameSim     # Simulation identifier
 @rget subtypeCell # Subclass labels for each cell
 @rget typeCell    # Class labels for each cell
 @rget typeCellT0_off # Switching labels
@@ -417,13 +417,13 @@ typePriorT::String = string(typeof(priorsT))
 
 R"""
 if(typeSIM == "sim"){
-    dir.create(paste0(pathToYourDirectory,"/simulations/", simName), showWarnings = FALSE)
-    dir.create(paste0(pathToYourDirectory,"/simulations/", simName, "/output/"), showWarnings = FALSE)
-    save.image(file = paste0(pathToYourDirectory, "/simulations/", simName, "/output/res_", typeSIM, "_", simName, "_", n_genes, "genes_", mcmcIter, ".RData"))
+    dir.create(paste0(pathToYourDirectory,"/simulations/", nameSim), showWarnings = FALSE)
+    dir.create(paste0(pathToYourDirectory,"/simulations/", nameSim, "/output/"), showWarnings = FALSE)
+    save.image(file = paste0(pathToYourDirectory, "/simulations/", nameSim, "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", mcmcIter, ".RData"))
 }else{
-    dir.create(paste0(pathToYourDirectory, "/output/real data/", typeSIM,  "/", simName), showWarnings = FALSE)
-    dir.create(paste0(pathToYourDirectory, "/output/real data/", typeSIM,  "/", simName, "/output"), showWarnings = FALSE)
+    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/", nameSim), showWarnings = FALSE)
+    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/", nameSim, "/output"), showWarnings = FALSE)
 
-    save.image(file = paste0(pathToYourDirectory, "/output/real data/", typeSIM, "/", simName, "/output/res_", typeSIM, "_", simName, "_", n_genes, "genes_", mcmcIter, ".RData"))
+    save.image(file = paste0(pathToYourDirectory, "/real data/", typeSIM, "/", nameSim, "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", mcmcIter, ".RData"))
 }
 """
