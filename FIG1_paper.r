@@ -49,23 +49,6 @@ df <- data.frame(alphaON = 3, alphaOFF = 1, gamma = 0.75, beta = 1, t0_off = 6, 
 # time limit fot the plots
 xlim <- 4*df$t0_off + 1.9
 
-#################################################################
-#################################################################
-themeGGPLOT <- theme(
-  axis.text.x = element_text(face = "bold", size = 25),
-  axis.text.y = element_text(face = "bold", size = 25),
-  axis.title.x = element_text(face = "bold", size = 25),
-  axis.title.y = element_text(face = "bold", size = 25),
-  legend.text = element_text(face = "bold", size = 25),
-  legend.title = element_text(face = "bold", size = 25)
-)
-
-themeLEGEND <- theme(legend.key.size = unit(1, 'cm'), legend.title = element_text(size = 15), legend.text = element_text(size = 15))
-
-colGGPLOT <- c("#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0")[-3]
-
-#####################################################################
-
 
 # compute the switching coordinates
 df$u0 <- u0(t0_off = df$t0_off, t0_on = 0, u0_off = NA, u0_on = NA, k = 0, alpha = c(df$alphaOFF, df$alphaON), beta = df$beta)

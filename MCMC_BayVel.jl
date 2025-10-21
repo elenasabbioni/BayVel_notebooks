@@ -66,7 +66,7 @@ real <- FALSE  # Flag for real data vs simulated
 nameSim <- paste0(typeSW, "-", typeT, "-", typeD)
 # Load DentateGyrus or Pancreas dataset
 if(startsWith(typeSIM, "DentateGyrus") | startsWith(typeSIM, "Pancreas")){
-  path <- paste0(pathToYourDirectory, "/real data/", typeSIM, "/")
+  path <- paste0(pathToYourDirectory, "/real data/", typeSIM, "/filter/")
   real <- TRUE
   n_clusters <- ifelse(typeT == "T1", 1, "mult")
   nameSimREAL <- paste0(typeSIM, n_genes, "genes_", n_clusters, "subgr.RData")
@@ -421,9 +421,9 @@ if(typeSIM == "sim"){
     dir.create(paste0(pathToYourDirectory,"/simulations/", nameSim, "/output/"), showWarnings = FALSE)
     save.image(file = paste0(pathToYourDirectory, "/simulations/", nameSim, "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", mcmcIter, ".RData"))
 }else{
-    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/", nameSim), showWarnings = FALSE)
-    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/", nameSim, "/output"), showWarnings = FALSE)
+    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/filter/", nameSim), showWarnings = FALSE)
+    dir.create(paste0(pathToYourDirectory, "/real data/", typeSIM,  "/filter/", nameSim, "/output"), showWarnings = FALSE)
 
-    save.image(file = paste0(pathToYourDirectory, "/real data/", typeSIM, "/", nameSim, "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", mcmcIter, ".RData"))
+    save.image(file = paste0(pathToYourDirectory, "/real data/", typeSIM, "/filter/", nameSim, "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", mcmcIter, ".RData"))
 }
 """

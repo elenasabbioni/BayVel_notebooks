@@ -32,16 +32,16 @@ set.seed(seed)
 n_genes <- 2000                   # number of genes
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 typeSIM <- "sim"                  # type of data (simulated, Pancreas, DentateGyrus)
-mcmc <- 150                       # MCMC iterations
+mcmc <- 250000                    # MCMC iterations
 # -----------------------------
 #  PATH 
 # -----------------------------
 # Set working directory ad load auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
 chrTypeSIM <- ifelse(typeSIM == "sim", "simulations", "real data")
-pathToBayVel_results <- paste0("pathToYourDirectory/", chrTypeSIM)
+pathToResults <- paste0(pathToYourDirectory, "/", chrTypeSIM)
 setwd(pathToBayVel_results)
 
 source(paste0(pathToYourDirectory, "/functions.R"))
@@ -73,7 +73,7 @@ source(paste0(pathToYourDirectory, "/functions.R"))
 # -----------------------------
 # COMPUTE LIKELIHOOD
 # -----------------------------
-likTOT <- rep(NA, SampleToSave)
+likTOT <- rep(NA, bv$SampleToSave)
     
 if(typeD == "D1"){ # Poisson
     for(iter in 1:bv$SampleToSave){

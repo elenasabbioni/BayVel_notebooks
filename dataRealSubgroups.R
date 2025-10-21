@@ -8,7 +8,7 @@
 #
 # INPUT: 
 # - typeSIM:            Type of real data (Pancreas or DentateGyrus)
-# - typeProcessing:     Pre-processing of scVelo functions that are still performed (: raw, filter, filter_and_normalize, filter_and_normalize_noLog, moments)
+# - typeProcessing:     Pre-processing of scVelo functions that are still performed (: filter, filter_and_normalize, filter_and_normalize_noLog, moments)
 # - plotDendogram:      Specify if we want to plot the dendograms obtained from the hierarchical clustering or not
 # 
 # DEPENDENCIES:
@@ -31,7 +31,7 @@ library(ggplot2)
 # INPUT
 # -----------------------------
 typeSIM <- "Pancreas"                  # type of data (Pancreas, DentateGyrus)
-typeProcessing <- "filter"             # Specify which scVelo pre-processing steps are still performed (options: raw, filter, filter_and_normalize, filter_and_normalize_noLog, moments)
+typeProcessing <- "filter"             # Specify which scVelo pre-processing steps are still performed (options: filter, filter_and_normalize, filter_and_normalize_noLog, moments)
 plotDendogram <- TRUE                  # Boolean, deciding if we want or not to plot the dendogram from the hierarchical clustering
 # -----------------------------
 #  PATH 
@@ -44,7 +44,7 @@ source(paste0(pathToYourDirectory, "functions.R"))
 # -----------------------------
 # LOAD THE DATA 
 # -----------------------------
-res <- loadRealData(dataset = typeSIM, typeProcessing = typeProcessing, pathData = paste0(pathToYourDirectory, chrTypeSIM, "/", typeSIM)) # import real data, where we have just filtered out data that are not enough expressed
+res <- loadRealData(typeProcessing = typeProcessing, pathData = paste0(pathToYourDirectory, chrTypeSIM, "/", typeSIM)) # import real data, where we have just filtered out data that are not enough expressed
 Y_u <- res$unspliced
 Y_s <- res$spliced
 typeCell <- res$typeCell

@@ -51,21 +51,25 @@ colnames(scv$Mu) <- as.character(seq(1,n_genes))
 # pre-processed counts
 scv$Ms <- as.matrix(read.csv(paste(scVeloName, "_Ms.csv", sep = ""), header = TRUE))
 colnames(scv$Ms) <- as.character(seq(1,n_genes))
-scv$var <- as.matrix(read.csv(paste(scVeloName, "_var.csv", sep = ""), header = TRUE))
+scv$var <- as.matrix(read.csv(paste(scVeloName, "_/var.csv", sep = ""), header = TRUE))
 
 # groups and subgroups labels
-scv$subtypeCellReal <- as.matrix(read.csv(paste(scVeloName, "_obs.csv", sep = ""), header = TRUE))[, "clusters"]
-scv$typeCellReal <- as.matrix(read.csv(paste(scVeloName, "_obs.csv", sep = ""), header = TRUE))[, "clusters"]
-
-# switching clusters
-if(nome1 == "SW1"){
-    scv$typeCellT0_offReal <- rep(1, n_cells)
-}else{
-    scv$typeCellT0_offReal <- scv$typeCellReal
-}
+scv$subtypeCellReal <- as.matrix(read.csv(paste(scVeloName, "_/obs.csv", sep = ""), header = TRUE))[, "clusters"]
+scv$subtypeCell <- as.numeric(as.factor(scv$subtypeCellReal))
+scv$typeCellReal <- as.matrix(read.csv(paste(scVeloName, "_/obs.csv", sep = ""), header = TRUE))[, "clusters"]
+scv$typeCell <- as.numeric(as.factor(scv$typeCellReal))
 
 # number of cells
-n_cells <- dim(scv$fit_t_)[1]
+n_cells <- dim(scv$Mu)[1]
+
+# switching clusters
+if(typeSW == "SW1"){
+    scv$typeCellT0_off <- rep(1, n_cells)
+}else{
+    scv$typeCellT0_off <- scv$typeCell
+}
+
+
 
 
 # --- Process the parameters according to the steps done in scVelo plotting functions and obtain the parameters used in BayVel plotting functions
@@ -73,8 +77,8 @@ scv$beta <- t(scv$fit_beta * scv$fit_scaling ) # scale beta with scaling paramet
 scv$alpha <- t(rbind(0, scv$fit_alpha)) # alpha_off assumed to be 0
 
 # compute switching points accordingly to the processed rates
-scv$u0_off <- u0_MCMC(t0_off = array(scv$fit_t_, dim = c(1, n_genes, 1)), t0_on = 0, u0_off = NA, u0_on = NA, k = 0, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)))
-scv$s0_off <- s0_MCMC(t0_off = array(scv$fit_t_, dim = c(1, n_genes, 1)), t0_on = 0, u0_off = NA, u0_on = NA, s0_off = NA, s0_on = NA, k = 0, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)), gamma = array(scv$fit_gamma, dim = c(n_genes, 1)))
+scv$u0_off <- u0_MCMC(t0_off = array(scv$fit_t_, dim = c(1, n_genes, 1)), t0_on = 0,k = 0, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)))
+scv$s0_off <- s0_MCMC(t0_off = array(scv$fit_t_, dim = c(1, n_genes, 1)), t0_on = 0, k = 0, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)), gamma = array(scv$fit_gamma, dim = c(n_genes, 1)))
 
 scv$u0_on <- array(0, dim = c(1, n_genes, 1))
 scv$s0_on <- array(0, dim = c(1, n_genes, 1))
@@ -89,7 +93,7 @@ scv$k <- array(scv$k, dim = c(n_cells, n_genes, 1))
 scv$tau <- array(scv$tau, dim = c(n_cells, n_genes, 1))
 
 # compute the mean of Mu and Ms
-scv$res <- u_and_s_withTauMCMC_new(tau = scv$tau, u0_off = scv$u0_off, u0_on = NA, s0_off = scv$s0_off, s0_on = NA, k = scv$k, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)), gamma = matrix(scv$fit_gamma, nrow = n_genes), subtypeCell = seq(1, n_cells), typeCellT0_off = rep(1, n_cells))
+scv$res <- u_and_s_withTauMCMC(tau = scv$tau, u0_off = scv$u0_off, u0_on = NA, s0_off = scv$s0_off, s0_on = NA, k = scv$k, alpha = array(scv$alpha, dim = c(n_genes, 2, 1)), beta = array(scv$beta, dim = c(n_genes, 1)), gamma = matrix(scv$fit_gamma, nrow = n_genes), subtypeCell = seq(1, n_cells), typeCellT0_off = rep(1, n_cells))
 scv$pos_u <- scv$res$u
 scv$pos_s <- scv$res$s
 

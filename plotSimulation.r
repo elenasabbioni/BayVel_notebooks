@@ -84,7 +84,7 @@ for(g in genesToPlot){
     }
     
     # gene dynamic for a single switching time, without subgroup-specific positions
-    gg_dynamic <- plot_sVSu(t0_off_real = t0_off_real[tyT0_off, g], t0_on_real = 0, alpha_real = alpha_real[g,], beta_real = beta_real[g], gamma_real = gamma_real[g], pos_u_real = plotU, pos_s_real = plotS, g = g, tipoCellula = subTy, add = FALSE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 40, axisText.size = 20, title.size = 40, colReal = "black", sizePoint = 10, lineSize = 1, gg = NA)      
+    gg_dynamic <- plot_sVSu(t0_off = t0_off_real[tyT0_off, g], t0_on = 0, alpha = alpha_real[g,], beta = beta_real[g], gamma = gamma_real[g], pos_u = plotU, pos_s = plotS, g = g, subGrLabels = subTy, add = FALSE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 40, axisText.size = 20, title.size = 40, colDyn = "black", sizePoint = 10, lineSize = 1, gg = NA)      
 
     list_plot[[k]] <- gg_dynamic   
     k <- k + 1

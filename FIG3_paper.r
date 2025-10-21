@@ -95,13 +95,13 @@ k <- 1
 for(g in genesTo_plot){
   for (tyT0_off in 1:max(bv$typeCellT0_off)){  
     # real
-    gg <- plot_sVSu(t0_off_real = real$t0_off_real[tyT0_off, g], t0_on_real = 0, alpha_real = real$alpha_real[g,], beta_real = real$beta_real[g], gamma_real = real$gamma_real[g], pos_u_real = NA, pos_s_real = NA, g = g, tipoCellula = bv$subtypeCell, add = FALSE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 10, title.size = 20, colReal = "red", lineSize = 1, gg = NA)      
+    gg <- plot_sVSu(t0_off = real$t0_off_real[tyT0_off, g], t0_on = 0, alpha = real$alpha_real[g,], beta = real$beta_real[g], gamma = real$gamma_real[g], pos_u = NA, pos_s = NA, g = g, subGrLabels = bv$subtypeCell, add = FALSE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 10, title.size = 20, colDyn = "red", lineSize = 1, gg = NA)      
       
     # scVelo
-    gg <- plot_sVSu_scVelo(fit_t0_off = scv$fit_t_[g], fit_t0_on = 0, fit_alpha = scv$fit_alpha[g], fit_beta = scv$fit_beta[g], fit_gamma = scv$fit_gamma[g], fit_scaling = scv$fit_scaling[g], fit_u0_offset = scv$fit_u0[g], fit_s0_offset = scv$fit_s0[g], fit_t = NA, g = g, tipoCellula = bv$subtypeCell, add = TRUE, colCell = NA, colReal = "blue", lineSize = 1, gg = gg)
+    gg <- plot_sVSu_scVelo(fit_t0_off = scv$fit_t_[g], fit_t0_on = 0, fit_alpha = scv$fit_alpha[g], fit_beta = scv$fit_beta[g], fit_gamma = scv$fit_gamma[g], fit_scaling = scv$fit_scaling[g], fit_u0_offset = scv$fit_u0[g], fit_s0_offset = scv$fit_s0[g], fit_t = NA, subGrLabels = bv$subtypeCell, g = g, add = TRUE, gg = gg, colCell = NA, colDyn = "blue", lineSize = 1)
 
     # BayVel
-    gg <- plot_sVSu(t0_off_real = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on_real = 0, alpha_real = bv$alpha_chain[g, , iterToPlot], beta_real = bv$beta_chain[g, iterToPlot], gamma_real = bv$gamma_chain[g, iterToPlot], pos_u_real = NA, pos_s_real = NA, g = g, tipoCellula = bv$subtypeCell, add = TRUE, colCell = NA, , xlim = 10, ylim = 10, axisTitle.size = 20, axisText.size = 20, title.size = 40, colReal = "darkgreen", lineSize = 1, gg = gg)
+    gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], pos_u = NA, pos_s = NA, g = g, subGrLabels = bv$subtypeCell, add = TRUE, colCell = NA, , xlim = 10, ylim = 10, axisTitle.size = 20, axisText.size = 20, title.size = 40, colDyn = "darkgreen", lineSize = 1, gg = gg)
 
     # add legend
     gg <- gg + 
