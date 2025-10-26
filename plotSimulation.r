@@ -43,7 +43,7 @@ library(RColorBrewer)
 # -----------------------------
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 n_genes <- 2000                   # total number of simulated genes 
 genesToPlot <- seq(1, 3)          # indexes of the genes that we want to plot          
 plotPosition <- TRUE              # boolean to decide if you want to plot or not the subgroup position in the plot

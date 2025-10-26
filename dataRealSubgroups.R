@@ -37,14 +37,14 @@ plotDendogram <- TRUE                  # Boolean, deciding if we want or not to 
 #  PATH 
 # -----------------------------
 # Set working directory ad load auxiliary functions
-pathToYourDirectory <- "C:/Users/elena/Dropbox (Politecnico Di Torino Studenti)/sabbioni/Code Elena/Reproducibility/"
+pathToYourDirectory <- "pathToYourDirectory"
 chrTypeSIM <- ifelse(typeSIM == "sim", "simulations", "real data")
-source(paste0(pathToYourDirectory, "functions.R"))
+source(paste0(pathToYourDirectory, "/functions.R"))
 
 # -----------------------------
 # LOAD THE DATA 
 # -----------------------------
-res <- loadRealData(typeProcessing = typeProcessing, pathData = paste0(pathToYourDirectory, chrTypeSIM, "/", typeSIM)) # import real data, where we have just filtered out data that are not enough expressed
+res <- loadRealData(typeProcessing = typeProcessing, pathData = paste0(pathToYourDirectory, "/", chrTypeSIM, "/", typeSIM)) # import real data, where we have just filtered out data that are not enough expressed
 Y_u <- res$unspliced
 Y_s <- res$spliced
 typeCell <- res$typeCell
@@ -88,7 +88,7 @@ ac_vec <- rep(NA, length(m))
 
 
 if(plotDendogram){
-    pdf(paste0(pathToYourDirectory, "/", chrTypeSIM, "/", typeSIM, "/", typeProcessing, "/hierClust_dendogram.pdf"))
+    pdf(paste0(pathToYourDirectory, "/", chrTypeSIM, "/", typeSIM, "/", typeProcessing, "/hierClust_dendogram.pdf"), height = 7*1.5, width = 7*1.2)
     par(mfrow = c(1,1))
 }
 
@@ -140,14 +140,16 @@ for(ty in 1:length(unique(pcaYus_dfFINAL$typeCellInt))){     # loop over each gr
     # Assign subgroups labels 
     pcaYus_dfFINAL[cellTy,]$subtypeCell <- (cut_min) + last
     last <- last + n_clusters
-}    
-dev.off()        
+}         
+dev.off()
 
-pdf(paste0(pathToYourDirectory, "/", chrTypeSIM, "/", typeSIM, "/", typeProcessing, "/hierClust.pdf"))
+
+pdf(paste0(pathToYourDirectory, "/", chrTypeSIM, "/", typeSIM, "/", typeProcessing, "/hierClust.pdf"), height = 7*1.5, width = 7*1.2)
 par(mfrow = c(1, 1))
 for(ty in unique(pcaYus_dfFINAL$typeCellInt)){
     cellTy <- which(pcaYus_dfFINAL$typeCellInt == ty)
-    ggplot(pcaYus_dfFINAL[cellTy, ], aes(x = PC1, y = PC2, col = as.factor(subtypeCell))) + geom_point(size = 3) + labs(title = pcaYus_dfFINAL$typeCell[pcaYus_dfFINAL$typeCellInt == ty][1], col = "Subgroups") + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25), plot.title = element_text(hjust = 0.5, size = 30), legend.title = element_text(size = 25), legend.text = element_text(size = 25), legend.position = "bottom")
+    gg <- ggplot(pcaYus_dfFINAL[cellTy, ], aes(x = PC1, y = PC2, col = as.factor(subtypeCell))) + geom_point(size = 3) + labs(title = pcaYus_dfFINAL$typeCell[pcaYus_dfFINAL$typeCellInt == ty][1], col = "Subgroups") + theme(axis.text = element_text(size = 20), axis.title = element_text(size = 25), plot.title = element_text(hjust = 0.5, size = 30), legend.title = element_text(size = 25), legend.text = element_text(size = 25), legend.position = "bottom")
+    plot(gg)
 }
 dev.off()
 

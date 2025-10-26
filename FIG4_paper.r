@@ -42,11 +42,11 @@ library(cowplot)
 # TYPE OF SIMULATION WE ARE CONSIDERING
 # -----------------------------
 n_genes <- 2000                   # number of genes
-mcmc <- 150                       # number of iterations of the mcmc we have run
+mcmc <- 250000                    # number of iterations of the mcmc we have run
 typeSIM <- "sim"                  # specify that we are considering simulated data
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 genesToPlot <- c(3, 12)           # indexes of the genes that we want to plot        
 
 addBayVel <- TRUE                 # specify if you want to plot the results of BayVel
@@ -124,17 +124,10 @@ for(g in genesToPlot){
 
         # Combine the plots using ggdraw and draw_plot
         final_plot <- ggdraw() +
-                      draw_plot(gg, 0, 0, 1, 1) # Main plot takes full space
+                      draw_plot(gg, 0, 0, 1, 1) + # Main plot takes full space
+                      draw_plot(leg2, 0.45, 0.73, 0.2, 0.3)     # Inset 2 at bottom left
 
-        if(g == 3){
-            final_plot <- final_plot + 
-            draw_plot(leg2, 0.41, 0.73, 0.2, 0.3)     # Inset 2 at bottom left
-        }else if(g == 12){
-            final_plot <- final_plot + 
-                draw_plot(leg2, 0.45, 0.73, 0.2, 0.3)
-        }
-
-        pdf(paste0(pathOutput, "/Fig4_col1_gene", g, "_tyT0_off", tyT0, ".pdf"), width = 7*1.2, height = 7*1.5)
+        pdf(paste0(pathOutput, "/Fig4_col1_row", ifelse(g == 3, "1", "2"), ".pdf"), width = 7*1.2, height = 7*1.5)
             plot(final_plot)
         dev.off() 
     }   
@@ -167,7 +160,7 @@ for(g in genesToPlot){
         gg <- plot_sVSu(t0_off = real$t0_off_real[tyT0_off, g], t0_on = 0, alpha = real$alpha_real[g,], beta = real$beta_real[g], gamma = real$gamma_real[g], pos_u = real$pos_u_real[,g], pos_s = real$pos_s_real[,g], g = g, subGrLabels = real$subtypeCell, add = TRUE, colCell = "red", xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 10, title.size = 30, colDyn = "red", lineSize = 0.5, shapePoint = 22, sizePoint = 3.5, gg = gg)  
 
         #  BayVel
-        gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], pos_u = bv$u_chain[,g,iterToPlot], pos_s = bv$s_chain[,g,iterToPlot], g = g, subGrLabels = bv$subtypeCell, add = TRUE, colCell = "darkgreen", , xlim = 10, ylim = 10, axisTitle.size = 20, axisText.size = 20, title.size = 30, colDyn = "darkgreen", lineSize = 0.5, shapePoint = 21, sizePoint = 4, gg = gg)
+        gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], pos_u = bv$u_chain[,g,iterToPlot], pos_s = bv$s_chain[,g,iterToPlot], g = g, subGrLabels = bv$subtypeCell, add = TRUE, colCell = "darkgreen", , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 20, title.size = 30, colDyn = "darkgreen", lineSize = 0.5, shapePoint = 21, sizePoint = 4, gg = gg)
 
         gg <- gg + 
             annotate(geom = "text", 
@@ -186,7 +179,7 @@ for(g in genesToPlot){
             guides(color = guide_legend(override.aes = list(size = 10, shape = c(16, 15)), nrow = 2)) + 
             theme(plot.title = element_text(family = "serif", size=50,  hjust = 0.5), axis.text = element_text(family = "serif", size = 35), axis.title = element_text(family = "serif", size = 45), legend.position = c(0.82, 0.08), legend.text = element_text(family = "serif", size = 38), legend.title = element_blank(), legend.key = element_rect(colour = "transparent", fill = NA), legend.background=element_blank(), plot.margin = unit(margin, "lines")) 
 
-        pdf(paste0(pathOutput, "/Fig4_col2_gene", g, "_tyT0_off", tyT0, ".pdf"), width = 7*1.2, height = 7*1.5)
+        pdf(paste0(pathOutput, "/Fig4_col2_row", ifelse(g == 3, "1", "2"), ".pdf"), width = 7*1.2, height = 7*1.5)
             plot(gg)
         dev.off() 
 
@@ -246,7 +239,7 @@ for(g in genesToPlot){
         gg <- plot_sVSu(t0_off = real$t0_off_real[tyT0_off, g], t0_on = 0, alpha = real$alpha_real[g,], beta = real$beta_real[g], gamma = real$gamma_real[g], pos_u = real$pos_u_real[sty,g], pos_s = real$pos_s_real[sty,g], g = g, subGrLabels = bv$subtypeCell[sty], add = TRUE, colCell = "red", xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 10, title.size = 30, colDyn = "red", lineSize = 1, shapePoint = 22, sizePoint = 5, gg = gg) + labs(title = "")
 
         # BayVel gene-dynamic
-        gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], bv$u_chain[subgroups,g,iterToPlot], pos_s = bv$s_chain[subgroups,g,iterToPlot], g = g, subGrLabels = bv$subtypeCell[sty], add = TRUE, colCell = "darkgreen", , xlim = 10, ylim = 10, axisTitle.size = 20, axisText.size = 20, title.size = 30, colDyn = "darkgreen", lineSize = 1, shapePoint = 21, sizePoint = 5, gg = gg)
+        gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], bv$u_chain[subgroups,g,iterToPlot], pos_s = bv$s_chain[subgroups,g,iterToPlot], g = g, subGrLabels = bv$subtypeCell[sty], add = TRUE, colCell = "darkgreen", , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 20, title.size = 30, colDyn = "darkgreen", lineSize = 1, shapePoint = 21, sizePoint = 5, gg = gg)
 
         # add labels of the estimated and real positions
         gg <- gg + 
@@ -255,8 +248,8 @@ for(g in genesToPlot){
                 x = unique(real$pos_s_real[sty,g])*scaling_x,
                 label = labels_real, size = 14, parse = TRUE,  family = "serif")  + 
             annotate(geom = "text", 
-                y = unique(bv$u_chain[subtypes, g, iterToPlot])*scaling_y_bv, 
-                x = unique(bv$s_chain[subtypes, g, iterToPlot])*scaling_x_bv, 
+                y = unique(bv$u_chain[subgroups, g, iterToPlot])*scaling_y_bv, 
+                x = unique(bv$s_chain[subgroups, g, iterToPlot])*scaling_x_bv, 
                 label =  labels_bv, size = 14, parse = TRUE,  family = "serif") + 
             annotate(geom = "text", y =  legend_y, x = legend_x,  label = "paste('Posterior samples of ','(', s^'~', ', ', u^'~', ')')", size = 14, parse = TRUE,  family = "serif") 
 
@@ -270,7 +263,7 @@ for(g in genesToPlot){
         }
 
         # save the output
-        pdf(paste0(pathOutput, "/Fig4_col3_gene", g, "_tyT0_off", tyT0, ".pdf"), width = 7*1.2, height = 7*1.5)
+        pdf(paste0(pathOutput, "/Fig4_col3_row", ifelse(g == 3, "1", "2"), ".pdf"), width = 7*1.2, height = 7*1.5)
             plot(gg)
         dev.off() 
     }

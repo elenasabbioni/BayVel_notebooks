@@ -37,7 +37,7 @@ pathOutput <- paste0(pathToYourDirectory, "/tablesPaper/")
 # -----------------------------
 library(xtable)
 library(data.table)
-
+library(LaplacesDemon)
 
 # -----------------------------
 # TABLE 3
@@ -50,7 +50,7 @@ T_vec <- c("T1", "T2", "T3")
 g <- expand.grid(SW_vec, T_vec)
 g$Var3 <- "D4"
 combinations <- paste(g$Var1, g$Var2, g$Var3, sep = "-")
-mcmc <- 150
+mcmc <- 250000
 
 
 table3 <- data.frame(nameSim = combinations, u_SS_OFF = NA, s_SS_OFF = NA, u_SS_ON = NA, s_SS_ON = NA, u0_off = NA, s0_off = NA, pos_u = NA, pos_s = NA, vel = NA,  eta = NA, catt = NA)

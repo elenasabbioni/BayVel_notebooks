@@ -25,10 +25,6 @@ set.seed(seed)
 # -----------------------------
 # Set directory with BayVel results and load file with auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
-pathToResults <- "pathToYourDirectory/real data"
-
-
-pathToYourDirectory <- "C:/Users/elena/Dropbox (Politecnico Di Torino Studenti)/sabbioni/Code Elena/Reproducibility/BayVel_notebooks"
 pathToResults <- paste0(pathToYourDirectory, "/real data")
 
 setwd(paste0(pathToYourDirectory))

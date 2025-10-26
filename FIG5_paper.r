@@ -24,7 +24,7 @@ set.seed(seed)
 # -----------------------------
 # Set directory with BayVel results and load file with auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
-pathToResults <- "pathToYourDirectory/real data"
+pathToResults <- paste0(pathToYourDirectory, "/real data")
 setwd(paste0(pathToYourDirectory))
 source(paste0(pathToYourDirectory, "/functions.R"))
 # Set the output path where you will save the images

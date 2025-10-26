@@ -15,6 +15,7 @@
 #             latex2exp
 #             RColorBrewer
 #             grid
+#             LaplacesDemon
 # ---------------------------------------------
 
 
@@ -27,7 +28,7 @@ set.seed(seed)
 # -----------------------------
 # Set directory with BayVel results and load file with auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
-pathToResults <- "pathToYourDirectory/simulations"
+pathToResults <- paste0(pathToYourDirectory, "/simulations")
 setwd(paste0(pathToYourDirectory))
 source(paste0(pathToYourDirectory, "/functions.R"))
 # Set the output path where you will save the images
@@ -40,13 +41,14 @@ library(ggplot2)
 library(latex2exp)
 library(RColorBrewer)
 library(grid)
+library(LaplacesDemon)
 
 
 # -----------------------------
 # TYPE OF SIMULATION WE ARE CONSIDERING
 # -----------------------------
 n_genes <- 2000                   # number of genes
-mcmc <- 150                       # number of iterations of the mcmc we have run
+mcmc <- 250000                    # number of iterations of the mcmc we have run
 typeSIM <- "sim"                  # specify that we are considering simulated data
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
@@ -56,7 +58,7 @@ genesToPlot <- c(1, 3, 12)        # indexes of the genes that we want to plot
 
 addBayVel <- TRUE                 # specify if you want to plot the results of BayVel
 addScVelo <- TRUE                 # specify if you want to plot the results of scVelo
-
+addReal   <- TRUE                 # specify if you want to plot the real dynamic
 
 # -----------------------------
 # LOAD THE DATA 
@@ -92,7 +94,7 @@ source(paste0(pathToYourDirectory, "/functions.R"))
 
 list_plot <- list()
 k <- 1
-for(g in genesTo_plot){
+for(g in genesToPlot){
   for (tyT0_off in 1:max(bv$typeCellT0_off)){  
     # real
     gg <- plot_sVSu(t0_off = real$t0_off_real[tyT0_off, g], t0_on = 0, alpha = real$alpha_real[g,], beta = real$beta_real[g], gamma = real$gamma_real[g], pos_u = NA, pos_s = NA, g = g, subGrLabels = bv$subtypeCell, add = FALSE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 10, title.size = 20, colDyn = "red", lineSize = 1, gg = NA)      
@@ -101,7 +103,7 @@ for(g in genesTo_plot){
     gg <- plot_sVSu_scVelo(fit_t0_off = scv$fit_t_[g], fit_t0_on = 0, fit_alpha = scv$fit_alpha[g], fit_beta = scv$fit_beta[g], fit_gamma = scv$fit_gamma[g], fit_scaling = scv$fit_scaling[g], fit_u0_offset = scv$fit_u0[g], fit_s0_offset = scv$fit_s0[g], fit_t = NA, subGrLabels = bv$subtypeCell, g = g, add = TRUE, gg = gg, colCell = NA, colDyn = "blue", lineSize = 1)
 
     # BayVel
-    gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], pos_u = NA, pos_s = NA, g = g, subGrLabels = bv$subtypeCell, add = TRUE, colCell = NA, , xlim = 10, ylim = 10, axisTitle.size = 20, axisText.size = 20, title.size = 40, colDyn = "darkgreen", lineSize = 1, gg = gg)
+    gg <- plot_sVSu(t0_off = bv$T0_off_chain[tyT0_off, g, iterToPlot], t0_on = 0, alpha = bv$alpha_chain[g, , iterToPlot], beta = bv$beta_chain[g, iterToPlot], gamma = bv$gamma_chain[g, iterToPlot], pos_u = NA, pos_s = NA, g = g, subGrLabels = bv$subtypeCell, add = TRUE, colCell = NA, , xlim = NA, ylim = NA, axisTitle.size = 20, axisText.size = 20, title.size = 40, colDyn = "darkgreen", lineSize = 1, gg = gg)
 
     # add legend
     gg <- gg + 
@@ -111,7 +113,7 @@ for(g in genesTo_plot){
           guides(color = guide_legend(override.aes = list(size = 15, shape = 15))) + 
           theme(legend.text = element_text("serif", size = 38),  legend.title = element_text(family = "serif", size = 40), legend.position="bottom", legend.key = element_rect(colour = "transparent", fill = NA), legend.background=element_blank(), plot.title = element_text(family = "serif", size=50,  hjust = 0.5), axis.text = element_text(family = "serif", size = 35),  axis.title = element_text(family = "serif", size = 45), plot.margin = unit(c(0.2,0.5,0,0), "lines")) 
  
-    pdf(paste0(pathOutput, "Fig3_gene", g, "_tyT0_off", tyT0, ".pdf"), width = 7*1.2, height = 7*1.5)
+    pdf(paste0(pathOutput, "Fig3_", ifelse(g == 1, "a", ifelse(g == 3, "b", "c")), ".pdf"), width = 7*1.2, height = 7*1.5)
       plot(gg)
     dev.off()
   }

@@ -37,6 +37,7 @@ pathOutput <- paste0(pathToYourDirectory, "/tablesPaper/")
 # -----------------------------
 library(xtable)
 library(data.table)
+library(LaplacesDemon)
 
 # -----------------------------
 # FUNCTIONS
@@ -51,7 +52,7 @@ relError <- function(estim, real, vettori = FALSE){
             include <- which(real != 0, arr.ind = TRUE)
             resPos <- median(abs((estim[include] - real[include])/real[include]))
         }else{
-            error("Error in dimensions of the input objects")
+            warning("Error in dimensions of the input objects")
         }
     }else{
         norm1 <- apply(estim - real_par, FUN = norm, MARGIN = 1, type = "2")
@@ -74,7 +75,7 @@ T_vec <- c("T1", "T2", "T3")
 g <- expand.grid(SW_vec, T_vec)
 g$Var3 <- "D4"
 combinations <- paste(g$Var1, g$Var2, g$Var3, sep = "-")
-mcmc <- 150
+mcmc <- 250000
 
 # output
 table2 <- data.frame("u_SS_ON" = rep(NA, 6),
@@ -110,37 +111,37 @@ for(nameSim in combinations){
     for(j in c("u_SS_ON", "u_SS_OFF", "s_SS_ON", "s_SS_OFF", "u0_off", "s0_off", "pos_u", "pos_s", "vel", "eta", "catt")){
         if(j =="u_SS_ON"){
             chain <- bv$uSS_on_chain
-            real_par <- bv$u_SSon_real
+            real_par <- real$alpha_real[,2]/real$beta_real
         }else if(j =="u_SS_OFF"){
             chain <- bv$uSS_off_chain
-            real_par <- bv$u_SSoff_real
+            real_par <- real$alpha_real[,1]/real$beta_real
         }else if(j =="s_SS_ON"){
             chain <- bv$sSS_on_chain
-            real_par <- bv$s_SSon_real
+            real_par <- real$alpha_real[,2]/real$gamma_real
         }else if(j =="s_SS_OFF"){
             chain <- bv$sSS_off_chain
-            real_par <- bv$s_SSoff_real
+            real_par <- real$alpha_real[,1]/real$gamma_real
         }else if(j == "u0_off"){
             chain <- bv$u0_off_chain
-            real_par <- bv$u0_off_real
+            real_par <- real$u0_off_real
         }else if(j == "s0_off"){
             chain <- bv$s0_off_chain
-            real_par <- bv$s0_off_real
+            real_par <- real$s0_off_real
         }else if(j == "pos_u"){
             chain <- bv$u_chain
-            real_par <- bv$pos_u_real
+            real_par <- real$pos_u_real
         }else if(j == "pos_s"){
             chain <- bv$s_chain
-            real_par <- bv$pos_s_real
+            real_par <- real$pos_s_real
         }else if(j == "vel"){
             chain <- bv$v
-            real_par <- matrix(rep(bv$beta_real, bv$n_cells), nrow = bv$n_cells, ncol = bv$n_genes, byrow = TRUE)* bv$pos_u_real -  matrix(rep(bv$gamma_real, bv$n_cells), nrow = bv$n_cells, ncol = bv$n_genes, byrow = TRUE)*bv$pos_s_real
+            real_par <- matrix(rep(real$beta_real, real$n_cells), nrow = real$n_cells, ncol = real$n_genes, byrow = TRUE)* real$pos_u_real -  matrix(rep(real$gamma_real, real$n_cells), nrow = real$n_cells, ncol = real$n_genes, byrow = TRUE)*real$pos_s_real
         }else if(j == "eta"){
             chain <- bv$Eta_chain
-            real_par <- bv$eta_real
+            real_par <- real$eta_real
         }else if(j == "catt"){
             chain <- bv$Catt_chain
-            real_par <- bv$catt_real
+            real_par <- real$catt_real
         }
 
         if(length(dim(chain)) == 2){
@@ -154,8 +155,8 @@ for(nameSim in combinations){
         }
 
         table2[k, j] <- relError(medianChain, real_par, FALSE)   
-        k <- k + 1
     }
+    k <- k + 1
 }
 
     
