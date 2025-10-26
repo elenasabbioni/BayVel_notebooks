@@ -6,10 +6,12 @@
 # --- load results
 if(nameSim == "moments"){
     # real data
+    path <- paste0(pathToResults, "/", typeSIM, "/", nameSim, "/output/res_", typeSIM)
     scVeloName <- paste0(pathToResults, "/", typeSIM, "/", nameSim, "/output/res_", typeSIM)
 }else{
     # simulated data
-    scVeloName <- paste0(pathToResults, "/", nameSim , "/output/res_,", typeSIM, "_", nameSim, "_", n_genes, "genes_", model, "_scVelo")
+    path <- paste0(pathToResults, "/", nameSim, "/", nameSim, "_", n_genes, "_", modelScVel)
+    scVeloName <- paste0(pathToResults, "/", nameSim , "/output/res_", typeSIM, "_", nameSim, "_", n_genes, "genes_", modelScVel, "_scVelo")
 }
 
 # rates and steady states
@@ -46,10 +48,10 @@ scv$velocity <- as.matrix(read.csv(paste(scVeloName, "_velocity.csv", sep = ""),
 colnames(scv$velocity) <- as.character(seq(1,n_genes))
 scv$velocity_u <- as.matrix(read.csv(paste(scVeloName, "_velocity_u.csv", sep = ""), header = TRUE))
 colnames(scv$velocity_u) <- as.character(seq(1,n_genes))
-scv$Mu <- as.matrix(read.csv(paste(scVeloName, "_Mu.csv", sep = ""), header = TRUE))
-colnames(scv$Mu) <- as.character(seq(1,n_genes))
 # pre-processed counts
-scv$Ms <- as.matrix(read.csv(paste(scVeloName, "_Ms.csv", sep = ""), header = TRUE))
+scv$Mu <- as.matrix(read.csv(paste(path, "_Mu.csv", sep = ""), header = TRUE))
+colnames(scv$Mu) <- as.character(seq(1,n_genes))
+scv$Ms <- as.matrix(read.csv(paste(path, "_Ms.csv", sep = ""), header = TRUE))
 colnames(scv$Ms) <- as.character(seq(1,n_genes))
 scv$var <- as.matrix(read.csv(paste(scVeloName, "_/var.csv", sep = ""), header = TRUE))
 
@@ -63,7 +65,7 @@ scv$typeCell <- as.numeric(as.factor(scv$typeCellReal))
 n_cells <- dim(scv$Mu)[1]
 
 # switching clusters
-if(typeSW == "SW1"){
+if(grepl("SW1", nameSim)){
     scv$typeCellT0_off <- rep(1, n_cells)
 }else{
     scv$typeCellT0_off <- scv$typeCell

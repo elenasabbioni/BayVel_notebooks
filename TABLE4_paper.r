@@ -37,7 +37,7 @@ pathOutput <- paste0(pathToYourDirectory, "/tablesPaper/")
 # -----------------------------
 library(xtable)
 library(data.table)
-
+library(LaplacesDemon)
 
 # -----------------------------
 # TABLE 4
@@ -49,8 +49,8 @@ typeSW <- "SW1"
 typeT <- "T1"
 typeD <- "D4"
 nameSim <- paste0(typeSW, "-", typeT, "-", typeD)
-model <- "NormInd"
-mcmc <- 150
+modelScVel <- "Demings"
+mcmc <- 250000
 
 table4 <- data.frame(nameMethod = c("BayVel", "scVelo"), u_SS_OFF = NA, s_SS_OFF = NA, u_SS_ON = NA, s_SS_ON = NA, vel = NA)
 
@@ -120,7 +120,7 @@ for(j in colnames(table4)[-1]){
         estimScVelo <- scv$fit_alpha/scv$fit_beta + scv$fit_u0
         estimScVelo <- estimScVelo[1,]
     }else if(j == "vel"){
-        chain <- env$v
+        chain <- bv$v
         realPar <- real$v_real
 
         estimScVelo <- scv$velocity # computed using fit_beta*fit_scaling 
@@ -133,7 +133,7 @@ for(j in colnames(table4)[-1]){
     }
 
     if(j %in% c("pos_u", "pos_s", "vel")){
-        medianChain <- medianChain[env$subtypeCell,]
+        medianChain <- medianChain[bv$subtypeCell,]
     }
         
     include <- which(realPar != 0, arr.ind = TRUE)
@@ -143,3 +143,9 @@ for(j in colnames(table4)[-1]){
     table4[which(table4$nameMethod == "BayVel"), j] <- resBayVel
     table4[which(table4$nameMethod == "scVelo"), j]  <- resScVelo
 }
+
+
+# save the code to generate the Table in TeX
+sink(paste0(pathOutput, "/Tab4.txt"))
+print(xtable(table4))
+sink()

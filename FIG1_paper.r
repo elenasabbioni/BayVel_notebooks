@@ -13,6 +13,7 @@
 #             latex2exp
 #             RColorBrewer
 #             grid
+#             gridExtra
 # ---------------------------------------------
 
 rm(list = ls())
@@ -37,6 +38,7 @@ library(ggplot2)
 library(latex2exp)
 library(RColorBrewer)
 library(grid)
+library(gridExtra)
 
 # ----------------------------------------------
 # FIG. 1A
@@ -116,9 +118,6 @@ gg_u <- ggplot(df_uON, aes(x = x, y = uON)) +
 df_sON  <- df_sON[ which(df_sON$x  < xlim),]
 df_sOFF <- df_sOFF[which(df_sOFF$x < xlim),]
 
-scaleFUN <- function(x) sprintf("%.1f", x)
-
-
 gg_s <- ggplot(df_sON, aes(x = x, y = sON)) + 
         geom_segment(x = df$t0_on, xend = df$t0_on, y = df$alphaOFF/df$gamma - 0.15, yend = df$alphaON/df$gamma + 1, linetype = "dotted", color = "grey", linewidth = 2) + 
         geom_segment(x = df$t0_on + df$t0_off, xend =  df$t0_on + df$t0_off, y = df$alphaOFF/df$gamma - 0.15, yend = df$alphaON/df$gamma + 1, linetype = "dotted", color = "grey", linewidth = 2) + 
@@ -190,22 +189,6 @@ for(i in 1:length(t0_off_v)){
 palette = brewer.pal(length(t0_off_v), "Set1")
 sizeLines = c(3,3)
 
-# add the position of te different subgroups
-t_v <- list()
-u_v <- list()
-s_v <- list()
-k_v <- list()
-
-t_v[[1]] <- c(0.35, 1.5, 2.5)    # subtype1
-t_v[[2]] <-  c(0.1, 1.65, 2.5)   # subtype2
-for(i in 1:length(t0_off_v)){
-  k_v[[i]] <- ifelse(t_v[[i]] < t0_off_v[i], 2, 0)
-  u_v[[i]] <- u(t_v[[i]], t0_off = t0_off_v[i], t0_on = 0, u0_off_v[i], u0_on = NA, k_v[[i]], alpha = c(df$alphaOFF, df$alphaON), beta = df$beta)
-  s_v[[i]] <- s(t_v[[i]], t0_off = t0_off_v[i], t0_on = 0, u0_off_v[i], u0_on = NA, s0_off_v[i], s0_on = NA, k_v[[i]],  alpha = c(df$alphaOFF, df$alphaON), beta = df$beta, gamma = df$gamma)
-}
-df_points <- data.frame(u = unlist(u_v), s = unlist(s_v),fill = brewer.pal(length(t0_off_v)*length(t_v[[1]]), "Set2"), color = rep(palette[1:length(t0_off_v)], each = length(t_v[[1]])))
-pl <- pl + geom_point(data = df_points, aes(x = s, y = u), color = df_points$color, fill = df_points$fill, pch = 16, size = 10, stroke = 3) 
-
 # position of the steady states
 u_SS_off <- df$alphaOFF/df$beta
 u_SS_on  <- df$alphaON/df$beta
@@ -249,6 +232,23 @@ for(i in 1:length(t0_off_v)){
             geom_path(aes(x = sOFF_SS, y = uOFF_SS, color = "blue"), linewidth = sizeLines[i])
     }
 }
+
+# add the position of te different subgroups
+t_v <- list()
+u_v <- list()
+s_v <- list()
+k_v <- list()
+
+t_v[[1]] <- c(0.35, 1.5, 2.5)    # subtype1
+t_v[[2]] <-  c(0.1, 1.65, 2.5)   # subtype2
+for(i in 1:length(t0_off_v)){
+  k_v[[i]] <- ifelse(t_v[[i]] < t0_off_v[i], 2, 0)
+  u_v[[i]] <- u(t_v[[i]], t0_off = t0_off_v[i], t0_on = 0, u0_off_v[i], u0_on = NA, k_v[[i]], alpha = c(df$alphaOFF, df$alphaON), beta = df$beta)
+  s_v[[i]] <- s(t_v[[i]], t0_off = t0_off_v[i], t0_on = 0, u0_off_v[i], u0_on = NA, s0_off_v[i], s0_on = NA, k_v[[i]],  alpha = c(df$alphaOFF, df$alphaON), beta = df$beta, gamma = df$gamma)
+}
+df_points <- data.frame(u = unlist(u_v), s = unlist(s_v),fill = brewer.pal(length(t0_off_v)*length(t_v[[1]]), "Set2"), color = rep(palette[1:length(t0_off_v)], each = length(t_v[[1]])))
+pl <- pl + geom_point(data = df_points, aes(x = s, y = u), color = df_points$color, fill = df_points$fill, pch = 16, size = 10, stroke = 3) 
+
 
 # add labels for switching points
 l1 <- TeX(r"($(s_{1g}^{omega}, u_{1g}^{omega})$)", output = "character")

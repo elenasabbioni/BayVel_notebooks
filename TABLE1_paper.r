@@ -89,7 +89,7 @@ rownames(table1) <- c("IN, K = 1, R = 10", "IN, K = 1, R = 30", "IN, K = 1, R = 
 
 # iterate over the different models and compute the relative error for each setting
 k <- 1
-for(model in c("NormInd", "Demings")){
+for(modelScVel in c("NormInd", "Demings")){
     for(nameSim in combinations){    
         real <- new.env(parent = baseenv())
         scv  <- new.env(parent = baseenv())
@@ -106,40 +106,40 @@ for(model in c("NormInd", "Demings")){
         # compute the error for the different parameters of the model
         for(j in c("u_SS_ON", "u_SS_OFF", "s_SS_ON", "s_SS_OFF", "u0_off", "s0_off", "pos_u", "pos_s", "vel")){
             if(j =="s_SS_ON"){
-                estim <- scVelo$fit_alpha/scVelo$fit_gamma + scVelo$fit_s0
+                estim <- scv$fit_alpha/scv$fit_gamma + scv$fit_s0
                 estim <- estim[1,]
                 real_par <- real$alpha_real[2,]/real$gamma_real
             }else if(j =="s_SS_OFF"){
-                estim <- scVelo$fit_s0
+                estim <- scv$fit_s0
                 estim <- estim[1,]
                 real_par <- real$alpha_real[1,]/real$gamma_real
             }else if(j =="u_SS_ON"){
-                estim <- scVelo$fit_alpha/scVelo$fit_beta + scVelo$fit_u0
+                estim <- scv$fit_alpha/scv$fit_beta + scv$fit_u0
                 estim <- estim[1,]
                 real_par <- real$alpha_real[2,]/real$beta_real
             }else if(j =="u_SS_OFF"){
-                estim <- scVelo$fit_u0
+                estim <- scv$fit_u0
                 estim <- estim[1,]
                 real_par <- real$alpha_real[1,]/real$beta_real
             }else if(j == "u0_off"){
-                estim <- scVelo$u0_off[1,,1]
+                estim <- scv$u0_off[1,,1]
                 real_par <- real$u0_off_real
             }else if(j == "s0_off"){
-                estim <- scVelo$s0_off[1,,1]
+                estim <- scv$s0_off[1,,1]
                 real_par <- real$s0_off_real
             }else if(j == "pos_u"){
-                estim <- scVelo$pos_u
+                estim <- scv$pos_u
                 real_par <- real$pos_u_real
             }else if(j == "pos_s"){
-                estim <- scVelo$pos_u
+                estim <- scv$pos_u
                 real_par <- real$pos_s_real
             }else if(j == "vel"){
-                estim <- scVelo$velocity 
+                estim <- scv$velocity 
                 real_par <- matrix(rep(real$beta_real, real$n_cells), nrow = real$n_cells, ncol = real$n_genes, byrow = TRUE)* real$pos_u_real -  matrix(rep(real$gamma_real, real$n_cells), nrow = real$n_cells, ncol = real$n_genes, byrow = TRUE)*real$pos_s_real
             }
             table1[k, j] <- relError(estim, real_par, FALSE)   
-            k <- k + 1
         }
+        k <- k + 1
     }
 }
 

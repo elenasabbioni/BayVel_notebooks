@@ -3,7 +3,7 @@
 # ========================
 using Pkg
 pathToYourDirectory::String = "pathToYourDirectory"
-BayVelPath::String = pathToYourDirectory * "/BayVel"
+BayVelPath::String = pathToYourDirectory * "../BayVel"
 Pkg.activate(pathToYourDirectory) # Activates the Julia environment in the specified directory, ensuring reproducibility.
 
 
@@ -44,7 +44,7 @@ using BayVel                   # Custom package of BayVel
 typeSIM::String = "sim"                 # Dataset or tissue type (possible values: "sim", "DentateGyrus", "Pancreas")
 typeSW::String = "SW1"                  # Switching structure type (typeSW = "SW1", "SW10")
 typeT::String = "T1"                    # Subgroup structure (typeT = "T1", "T2", "T3" for simulated data, typeT = "T1", "T2" for real data)
-typeD::String = "D1"                    # Likelihood distribution ("D1" for Poisson, "D4" for Negative Binomial)
+typeD::String = "D4"                    # Likelihood distribution ("D1" for Poisson, "D4" for Negative Binomial)
 
 model::BayVel.groupSubgroup = BayVel.groupSubgroup()
 n_genes::Int64 = 2000                   # number of simulated genes

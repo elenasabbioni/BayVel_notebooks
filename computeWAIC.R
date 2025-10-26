@@ -22,6 +22,7 @@
 # DEPENDENCIES:
 # - External functions loaded from "functions.R" (e.g. u(), s(), u0(), s0())
 # - packages: compiler
+#             LaplacesDemon
 #             
 # -----------------------------------------------------------
 
@@ -33,6 +34,7 @@ set.seed(seed)
 # PACKAGES
 # -----------------------------
 library(compiler)
+library(LaplacesDemon)
 
 # -----------------------------
 # SIMULATION PARAMETERS
@@ -40,9 +42,9 @@ library(compiler)
 n_genes <- 2000                   # number of genes
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 typeSIM <- "Pancreas"             # type of data (Pancreas, DentateGyrus)
-mcmc <- 150                       # MCMC iterations
+mcmc <- 250000                    # MCMC iterations
 
 nameSim <- paste0(typeSW, "-", typeT, "-", typeD)
 # -----------------------------
@@ -51,9 +53,9 @@ nameSim <- paste0(typeSW, "-", typeT, "-", typeD)
 # Set working directory ad load auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
 chrTypeSIM <- ifelse(typeSIM == "sim", "simulations", "real data")
-pathToBayVel_results <- paste0("pathToYourDirectory/", chrTypeSIM)
-setwd(pathToBayVel_results)
-pathOutput <- paste0(pathToBayVel_results, "/", nameSim, "/output/")
+pathToResults <- paste0(pathToYourDirectory, "/", chrTypeSIM)
+setwd(pathToResults)
+pathOutput <- paste0(pathToResults, "/", nameSim, "/output/")
 
 source(paste0(pathToYourDirectory, "/functions.R"))
 
@@ -62,7 +64,7 @@ source(paste0(pathToYourDirectory, "/functions.R"))
 # -----------------------------
 # environment where we will load the results from the different methods
 bv <- new.env(parent = baseenv()) 
-source(paste0(dirDropboxSabbioni, "/Code Elena/R/loadBayVel_results.r"))
+source(paste0(pathToYourDirectory, "/loadBayVel_results.r"))
 
 # upload the functions in order to check the version of the functions is the last one and they were not overwritten when the data were loaded.
 source(paste0(pathToYourDirectory, "/functions.R"))

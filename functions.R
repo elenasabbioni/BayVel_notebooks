@@ -258,7 +258,7 @@ s0 <- function(t0_off = NA, t0_on = 0, u0_off = NA, u0_on = NA, s0_off = NA, s0_
 
     if(any(is.na(t0_off))){
       t <- rep(NA, length(k))
-      t[which(is.na(t0_off))] <. rep(Inf, length(which(is.na(t0_off)))) # the cells do not switch and remain in the inductive state, such that the upper steady state is reached
+      t[which(is.na(t0_off))] <- rep(Inf, length(which(is.na(t0_off)))) # the cells do not switch and remain in the inductive state, such that the upper steady state is reached
     }else{
       t <- t0_off # the upper steady state is not reached and the dynamic switch to the repressive phase
     }
@@ -816,7 +816,7 @@ plot_sVSu <- function(
   s0_on <- s0(k = 2, alpha = alpha, beta = beta, gamma = gamma)
  
   # Compute the points lying on the on branch of the dynamic. We assume here the switching point is infinite, in order to plot the potential behavior up to the upper steady state.
-  t_seq <- seq(t0_on_real, 500, 0.1)
+  t_seq <- seq(t0_on, 500, 0.1)
   u_plot <- u(t_seq, t0_off = Inf, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, k = rep(2, length(t_seq)), alpha, beta)
   s_plot <- s(t_seq, t0_off = Inf, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, s0_off = s0_off, s0_on = s0_on, k = rep(2, length(t_seq)), alpha, beta, gamma)
   
@@ -839,7 +839,6 @@ plot_sVSu <- function(
     gg <- gg + 
           geom_path(data = df_on, aes(x = s_plot, y = u_plot), lty = 2, col = colDyn, linewidth = lineSize)
   }
-
   # adjust graphical parameters
   if(is.numeric(axisText.size)){
     gg <- gg + theme(axis.text = element_text(size = axisText.size))
@@ -865,10 +864,10 @@ plot_sVSu <- function(
   df_off <- data.frame(s_plot = s_plot, u_plot = u_plot)
   gg <- gg + geom_path(data = df_off, aes(x = s_plot, y = u_plot), lty = 2, col = colDyn, linewidth = lineSize) 
   
-  # If a finite t0_off_real is provided, compute the transient branches:
-  #  - ON branch from t0_on_real to t0_off_real (solid line)
-  #  - OFF branch from t0_off_real to t0_off_real + 500 (solid line)
-  # Else (t0_off_real == Inf) we reuse the previously computed branch(s).
+  # If a finite t0_off is provided, compute the transient branches:
+  #  - ON branch from t0_on to t0_off (solid line)
+  #  - OFF branch from t0_off to t0_off + 500 (solid line)
+  # Else (t0_off == Inf) we reuse the previously computed branch(s).
 
   if(t0_off != Inf){
     # compute initial conditions at the switching times
@@ -878,7 +877,7 @@ plot_sVSu <- function(
     s0_on  <- s0(t0_on = t0_on, k = 2, alpha = alpha, beta = beta, gamma = gamma)
 
  
-    # ON transient: from t0_on_real up to t0_off_real (solid line)
+    # ON transient: from t0_on up to t0_off (solid line)
     t_on_trans <- seq(t0_on, t0_off, 0.1)
     u_plot <- u(t_on_trans, t0_off = t0_off, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, k = rep(2, length(t_on_trans)), alpha, beta)
     s_plot <- s(t_on_trans, t0_off = t0_off, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, s0_off = s0_off, s0_on = s0_on, k = rep(2, length(t_on_trans)), alpha, beta, gamma)
@@ -887,7 +886,7 @@ plot_sVSu <- function(
     gg <- gg + 
           geom_path(data = df_on_trans, aes(x = s_plot, y = u_plot), lty = 1, col = colDyn, linewidth = lineSize) 
    
-    #  OFF transient: from t0_off_real onward (solid line)
+    #  OFF transient: from t0_off onward (solid line)
     t_off_trans <- seq(t0_off, t0_off + 500, 0.1)
     u_plot <- u(t_off_trans, t0_off = t0_off, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, k = rep(0, length(t_off_trans)), alpha, beta)
     s_plot <- s(t_off_trans, t0_off = t0_off, t0_on = t0_on, u0_off = u0_off, u0_on = u0_on, s0_off = s0_off, s0_on = s0_on, k = rep(0, length(t_off_trans)), alpha, beta, gamma)
@@ -912,15 +911,16 @@ plot_sVSu <- function(
     if(length(pos_s) == length(subGrC)){
       df <- data.frame(s = pos_s, u = pos_u)
     }else{
-      pos_s <- c()
-      pos_u <- c()
+      tmpS <- c()
+      tmpU <- c()
       for(i in 1:length(subGrC)){
           x <- subGrC[i]
-          pos_s <- c(pos_s, pos_s[which(subGrLabels == x)[1]])
-          pos_u <- c(pos_u, pos_u[which(subGrLabels == x)[1]]) 
+          tmpS <- c(tmpS, pos_s[which(subGrLabels == x)[1]])
+          tmpU <- c(tmpU, pos_u[which(subGrLabels == x)[1]]) 
       }
-      df <- data.frame(s = pos_s, u = pos_u)
+      df <- data.frame(s = tmpS, u = tmpU)
     }
+
 
     # Choose palette if colCell not provided
     if(sum(is.na(colCell)) == 1){
@@ -932,6 +932,7 @@ plot_sVSu <- function(
         colCell <- c("darkgreen")
       }
     }
+    
     df$colCell <- colCell
     # Add points to the plot
     gg <- gg + geom_point(data = df, aes(x = s, y = u, fill = colCell), fill = colCell, col = colDyn, size = sizePoint, shape = shapePoint)

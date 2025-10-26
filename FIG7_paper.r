@@ -24,10 +24,6 @@ set.seed(seed)
 # -----------------------------
 # Set directory with BayVel results and load file with auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
-pathToResults <- "pathToYourDirectory/real data"
-
-
-pathToYourDirectory <- "C:/Users/elena/Dropbox (Politecnico Di Torino Studenti)/sabbioni/Code Elena/Reproducibility/BayVel_notebooks"
 pathToResults <- paste0(pathToYourDirectory, "/real data")
 
 setwd(paste0(pathToYourDirectory))
@@ -139,7 +135,7 @@ for(nameSim in nameSim_vec){
     
     # select better colors
     gg <- ggplot(data = subset(dfYs, type == "Ys")) +
-    geom_point(aes(x = pcI, y = pcII, fill = subtypeCell, color = subtypeCell))
+    geom_point(aes(x = pcI, y = pcII, fill = typeCell, color = typeCell))
     plot_build <- ggplot_build(gg)
     color <- unique(plot_build$data[[1]]$fill)
     if(nameSim == "SW1-T2-D4"){
@@ -148,7 +144,7 @@ for(nameSim in nameSim_vec){
     
     # graphical parameters
     dfYs$fill <- c(rep(color[bv$typeCell], 1), rep(color[bv$predPCA$typeCell],addBayVel))
-    dfYs$color <- c(color[bv$subtypeCell], rep("darkgreen", length(bv$subtypeCell)*addBayVel))
+    dfYs$color <- c(color[bv$typeCell], rep("darkgreen", length(bv$subtypeCell)*addBayVel))
     fillLegendYs <- c(rep("darkgreen", 1*addBayVel), "white")
    
    

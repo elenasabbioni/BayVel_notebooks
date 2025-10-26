@@ -37,7 +37,7 @@ set.seed(seed)
 # -----------------------------
 # Set working directory and load file with auxiliary functions
 pathToYourDirectory <- "pathToYourDirectory"
-setwd(paste0(pathToYourDirectory, "/simulations"))
+setwd(paste0(pathToYourDirectory))
 source(paste0(pathToYourDirectory, "/functions.R"))
 
 # -----------------------------
@@ -47,7 +47,7 @@ n_cells <- 3000                   # Number of cells
 n_genes <- 2000                   # number of genes
 n_typeC <- 10                     # number of types of cells
 typeSW <- "SW1"                   # common or cluster-specific switching points
-typeT <- "T2"                     # number of subgroups
+typeT <- "T1"                     # number of subgroups
 typeD <- "D4"                     # type of data distribution
 
 
@@ -186,8 +186,8 @@ if(typeD == "D1"){
     catt_real <- runif(n_cells, 0.5, 1)
 }
 # Solve not identifiability of capture efficiencies
-sumCatt_real <- sum(catt_real)
-catt_real <- catt_real/sumCatt_real
+meanCatt_real <- mean(catt_real)
+catt_real <- catt_real/meanCatt_real
 
 # --- Overdispersion
 if(typeD == "D1"){
@@ -204,7 +204,7 @@ for(g in 1:n_genes){
     alpha_real[g,1] <- runif(1, 1, 5)
     alpha_real[g,2] <- runif(1, 6, 10)
     # update the parameters according to not identifiability of capture efficiencies
-    alpha_real[g,] <- alpha_real[g,]*sumCatt_real
+    alpha_real[g,] <- alpha_real[g,]*meanCatt_real
 
     beta_real[g] <- 1            # fixed beta for identifiability
     gamma_real[g] <- runif(1, 0.5, 1.5)

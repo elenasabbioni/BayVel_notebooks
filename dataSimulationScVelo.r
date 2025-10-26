@@ -48,7 +48,7 @@ n_genes <- 2000                   # number of genes
 n_typeC <- 10                     # number of types of cells
 typeSW <- "SW1"                   # common or cluster-specific switching points
 typeT <- "T1"                     # number of subgroups
-typeD <- "D1"                     # type of data distribution
+typeD <- "D4"                     # type of data distribution
 
 # -----------------------------
 # LOAD BAYVEL SIMULATED DATA (TO USE THE SAME SIMULATED PARAMTERES)
@@ -99,7 +99,7 @@ write.csv(Ms, file = paste0(pathToYourDirectory, "/simulations/", nameSim, "/", 
 # --- SAVE AUXILIARY FILES
 obs <- cbind(typeCell, subtypeCell)
 colnames(obs) <- c("clusters_coarse", "clusters")
-write.csv(obs, file = paste0(pathToYourDirectory, "/simulations/", nameSim, "/", nameSim, "_", n_genes, "_OBS.csv"), row.names = FALSE)
+write.csv(obs, file = paste0(pathToYourDirectory, "/simulations/", nameSim, "/", nameSim, "_", n_genes, "_obs.csv"), row.names = FALSE)
 
 var <- seq(1, n_genes)
 var <- cbind(var, "NaN")
